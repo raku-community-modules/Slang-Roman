@@ -2,13 +2,12 @@
 
 Allow your integers to be Roman numerals.
 
-* my Int $r = 0rMMCXVI; # $r == 2016
-* printf "%{roman}d", $r; # MMCXVI
+* my Int $r = 0rMMXVI; # $r == 2016
+* Eventually: printf "%{roman}d", $r; # MMXVI
 
 What it doesn't do [yet]
 
 * printf
-* the rest.
 
 #Use
 

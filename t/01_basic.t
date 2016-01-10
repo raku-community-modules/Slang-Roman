@@ -4,90 +4,79 @@ use lib 'lib';
 use Slang::Roman;
 use Test;
 
+plan 5;
 
-my $optout; #of testing because of no drivers.
+# Start by testing the ASCII equivalents, making sure to do both additive
+# and subtractive Roman numerals. The subtractive form wasn't used until
+# the 1400s or so, I think.
+#
+# I'd read somewhere that it was introduced because of clock faces, but that
+# sounds like a question for Snopes or the Straight Dope.
+#
+subtest sub {
+  is 0rI, 1, q{Roman numeral 1};
+  is 0rII, 2, q{Roman numeral 2};
+  is 0rIII, 3, q{Roman numeral 3};
+  is 0rIIII, 4, q{Roman numeral 4};
+  is 0rV, 5, q{Roman numeral 5};
+  is 0rX, 10, q{Roman numeral 10};
+  is 0rXI, 11, q{Roman numeral 11};
+  is 0rXII, 12, q{Roman numeral 12};
+  is 0rL, 50, q{Roman numeral 50};
+  is 0rC, 100, q{Roman numeral 100};
+  is 0rD, 500, q{Roman numeral 500};
+  is 0rM, 1_000, q{Roman numeral 1000};
 
-#my $*DB = DBIish.connect(
-#  'SQLite', 
-#  :database<sqlite.sqlite3>,
-#) or $optout = 1;
+  subtest sub {
+    is 0rIV, 4, q{Roman numeral 4 subtractive};
+    is 0rXIV, 14, q{Roman numeral 14 subtractive};
+  }, 'subtractive';
 
-#if $optout == 1 {
-#  plan 2;
-#  ok True, 'Able to \'use\'';
-#  ok True, 'Please install SQLite drivers for full test';
-#  exit;
-#}
+  is 0rMMXVI, 2016, q{Year of module release};
 
-#plan 18;
+}, 'ASCII representations';
 
-#my @a     = 5;
-#my $count = 0; 
+# There's also a Unicode range of Roman numerals, which lets us go into the
+# hundreds of thousands.
+#
+# There's *also* a notation where you can put bars over a Roman numeral to
+# multiply it by 1000, and stacking multiple bars means multiplying it by 1000
+# each time.
+#
+# I may implement this if I'm feeling particularly masochistic.
+#
+subtest sub {
+  is 0rⅠ, 1, q{Roman Unicode numeral 1};
+  is 0rⅡ, 2, q{Roman Unicode numeral 2};
+  is 0rⅢ, 3, q{Roman Unicode numeral 3};
+  is 0rⅣ, 4, q{Roman Unicode numeral 4};
+  is 0rⅤ, 5, q{Roman Unicode numeral 5};
+  is 0rⅥ, 6, q{Roman Unicode numeral 6};
+  is 0rⅦ, 7, q{Roman Unicode numeral 7};
+  is 0rⅧ, 8, q{Roman Unicode numeral 8};
+  is 0rⅨ, 9, q{Roman Unicode numeral 9};
+  is 0rⅩ, 10, q{Roman Unicode numeral 10};
+  is 0rⅪ, 11, q{Roman Unicode numeral 11};
+  is 0rⅫ, 12, q{Roman Unicode numeral 12};
+  is 0rⅬ, 50, q{Roman Unicode numeral 50};
+  is 0rⅭ, 100, q{Roman Unicode numeral 100};
+  is 0rⅮ, 500, q{Roman Unicode numeral 500};
+  is 0rⅯ, 1_000, q{Roman Unicode numeral 1_000};
+  is 0rↀ, 1_000, q{Roman Unicode numeral 1_000}; # Special uncial
+  is 0rↁ, 5_000, q{Roman Unicode numeral 5_000};
+  is 0rↂ, 10_000, q{Roman Unicode numeral 10_000};
+  is 0rↇ, 50_000, q{Roman Unicode numeral 50_000};
+  is 0rↈ, 100_000, q{Roman Unicode numeral 100_000};
+}, 'Unicode range';
 
-#sql drop table if exists stuff; 
-#ok True, 'dropped table';
+# Make sure that Roman numerals act like regular numbers, in that you can put
+# them in variables and pass them to expressions.
 #
-#sql create table if not exists stuff (id integer, sid varchar(32));
-#ok True, 'created table';
-#
-#try {
-#  sql this statement will die;
-#  CATCH {
-#    default {
-#      ok True, 'contained a sql error';
-#      #$*DB.errstr.say;
-#    }
-#  }
-#};
-#
-#for 1..100 {
-#  sql insert into stuff (id, sid) values (?, ?); with ($_, "SID $_");
-#}
-#ok True, 'insert didn\'t die, checking val count';
-#
-#sql select * from stuff where id >= ?; with (@a) do -> $row {
-#  ok 'select * from stuff where id >= ?' eq $*STATEMENT, '$*STATEMENT set correctly' if $count++ == 0;
-#};
-#ok $count == 96, 'inserted record count is good';
-#
-#$count = 0;
-#sql select * from stuff; do -> $row {
-#  $count++;
-#  last;
-#}
-#ok $count == 1, 'testing \'last\' keyword in sql loop';
-#
-#
-#my $truf = True;
-#my $s1   = '';
-#my $s2   = '';
-#sql select * from stuff order by id asc; do -> $row {
-#  $s1 = $*STATEMENT;
-#  sql select count(*) from stuff where id > ?; with ($row<id>) do -> $count {
-#    $s2 = $*STATEMENT;
-#    $truf = False if 100 - $row<id> != $count<count(*)>;
-#  };
-#};
-#ok $truf, 'Nested SQLs works!';
-#ok $s1 eq 'select * from stuff order by id asc', '$*STATEMENT is correct in nested sql';
-#ok $s2 eq 'select count(*) from stuff where id > ?', '$*STATEMENT is correct in nested sql';
-#
-#
-#$count = 25;
-#sql select * from stuff where
-#           id >= ?
-#       AND id <= ?; with (25,30) do -> $ROW {
-#  ok $ROW<id> eq $count && $ROW<sid> eq "SID $count", "row $count good";
-#  $count++;
-#};
-#
-#$count = 0;
-#sql select * from stuff where sid like '%;%'; do -> $a {
-#  $count++;
-#};
-#ok True, 'A ; surrounded by \' didn\'t affect parsing';
-#ok $count == 0, 'no call back on something with no rows returned';
-#
-##this doesn't work:
-##sql drop table if exists stuff;  if False;
-#
+is 0rI + 1, 2, q{Roman numeral 1 in expression};
+
+my $v = 0rI;
+is $v, 1, q{Roman numeral 1 in variable};
+
+sub foo( Int $a, Int $b ) { $a + $b }
+
+is foo( 0rIV, 0rVI ), 10, q{Roman numerals in expression};
