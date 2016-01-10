@@ -14,12 +14,12 @@ What it doesn't do [yet]
 ```perl6
 use Slang::Roman;
 
-say 0rIV;
+say 0rXIV;
 ```
 
 ```Output:
 
-4
+14
 ```
 
 ##Better Examples
