@@ -189,7 +189,7 @@ sub EXPORT(|)
                      :name<&Slang::Roman::to-number>,
                      QAST::SVal.new(:value($number.Str))
                    );
-      $/.'!make'($block);
+      $/.make($block);
       }
     }
 
