@@ -1,4 +1,4 @@
-#Slang::Roman
+# Slang::Roman
 
 Allow your integers to be Roman numerals.
 
@@ -22,6 +22,6 @@ say 0rXIV;
 14
 ```
 
-##Better Examples
+## Better Examples
 
 Check out ```t/01_basic.t```
