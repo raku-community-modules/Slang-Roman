@@ -18,7 +18,7 @@ my $i = 0rMMXVI; # $i = 2016
 DESCRIPTION
 ===========
 
-This bit of admittedly twisted code let you use Roman numerals in your Perl 6 code. It patches the running grammar so you can use a Roman numeral anywhere you would use a regular integer.
+This bit of admittedly twisted code let you use Roman numerals in your Raku code. It patches the running grammar so you can use a Roman numeral anywhere you would use a regular integer.
 
 Future enhancements will include expansions to printf/sprintf with a custom formatting type, and the equivalents of `hex()` to handle string conversion.
 

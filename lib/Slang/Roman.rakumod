@@ -7,7 +7,7 @@ use QAST:from<NQP>;
 # The short version: Slang::Roman::to-number takes the value it's given and
 # returns a Roman numeral representing it.
 #
-# The Roman::Grammar and Roman::Actions are spliced into the running Perl 6
+# The Roman::Grammar and Roman::Actions are spliced into the running Raku
 # grammar and augment the existing <number> type to include my <romanint>
 # token.
 #
@@ -200,7 +200,7 @@ my $i = 0rMMXVI; # $i = 2016
 
 =head1 DESCRIPTION
 
-This bit of admittedly twisted code let you use Roman numerals in your Perl 6 code. It patches the running grammar so you can use a Roman numeral anywhere you would use a regular integer.
+This bit of admittedly twisted code let you use Roman numerals in your Raku code. It patches the running grammar so you can use a Roman numeral anywhere you would use a regular integer.
 
 Future enhancements will include expansions to printf/sprintf with a custom formatting type, and the equivalents of C<hex()> to handle string conversion.
 
