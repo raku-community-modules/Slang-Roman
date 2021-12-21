@@ -1,11 +1,23 @@
 {
-  "perl" : "6.*",
-  "name" : "Slang::Roman",
-  "version" : "0.1",
-  "description" : "A slang to allow Roman numerals",
-  "depends" : [],
-  "provides" : {
-      "Slang::Roman": "lib/Slang/Roman.pm6"
+  "auth": "zef:raku-community-modules",
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "lets you use Roman numerals in your code",
+  "license": "Artistic-2.0",
+  "name": "Slang::Roman",
+  "perl": "6.*",
+  "provides": {
+    "Slang::Roman": "lib/Slang/Roman.rakumod"
   },
-  "source-url" : "git://github.com/raku-community-modules/Slang-Roman.git"
+  "resources": [
+  ],
+  "source-url": "git://github.com/raku-community-modules/Slang-Roman.git",
+  "tags": [
+    "NUMERALS"
+  ],
+  "test-depends": [
+  ],
+  "version": "0.2"
 }

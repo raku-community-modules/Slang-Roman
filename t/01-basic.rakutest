@@ -1,8 +1,5 @@
-#!/usr/bin/env perl6
-
-use lib 'lib';
-use Slang::Roman;
 use Test;
+use Slang::Roman;
 
 plan 5;
 
@@ -84,3 +81,5 @@ is $v, 1, q{Roman numeral 1 in variable};
 sub foo( Int $a, Int $b ) { $a + $b }
 
 is foo( 0rIV, 0rVI ), 10, q{Roman numerals in expression};
+
+# vim: expandtab shiftwidth=4

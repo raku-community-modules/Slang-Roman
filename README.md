@@ -1,27 +1,40 @@
-# Slang::Roman
+[![Actions Status](https://github.com/raku-community-modules/Slang-Roman/workflows/test/badge.svg)](https://github.com/raku-community-modules/Slang-Roman/actions)
 
-Allow your integers to be Roman numerals.
+NAME
+====
 
-* my Int $r = 0rMMXVI; # $r == 2016
-* Eventually: printf "%{roman}d", $r; # MMXVI
+Slang::Roman - lets you use Roman numerals in your code
 
-What it doesn't do [yet]
+SYNOPSIS
+========
 
-* printf
-
-#Use
-
-```perl6
+```raku
 use Slang::Roman;
 
-say 0rXIV;
+say 0rI + 0rIX; # 10
+my $i = 0rMMXVI; # $i = 2016
 ```
 
-```Output:
+DESCRIPTION
+===========
 
-14
-```
+This bit of admittedly twisted code let you use Roman numerals in your Perl 6 code. It patches the running grammar so you can use a Roman numeral anywhere you would use a regular integer.
 
-## Better Examples
+Future enhancements will include expansions to printf/sprintf with a custom formatting type, and the equivalents of `hex()` to handle string conversion.
 
-Check out ```t/01_basic.t```
+While it handles both additive and subtractive Roman numerals, it doesn't check that they're properly formatted. For instance 'IC' should be a compile-time error but instead it'll generate 101 as if nothing of consequence happened.
+
+AUTHOR
+======
+
+Jeff Goff (DrForr)
+
+Source can be located at: https://github.com/raku-community-modules/Slang-Roman . Comments and Pull Requests are welcome.
+
+COPYRIGHT AND LICENSE
+=====================
+
+Copyright 2016, 2018 Jeff Goff, 2020- Raku Community
+
+This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+
