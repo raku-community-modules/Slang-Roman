@@ -34,7 +34,7 @@ Source can be located at: https://github.com/raku-community-modules/Slang-Roman 
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2016, 2018 Jeff Goff, 2020- Raku Community
+Copyright 2016, 2018 Jeff Goff, 2020-2023 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

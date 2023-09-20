@@ -1,185 +1,120 @@
-use nqp;
-use QAST:from<NQP>;
-
-# This feels like something of a cheat, because I should be able to do it
-# directly at the NQP level. But this method works for now.
-#
-# The short version: Slang::Roman::to-number takes the value it's given and
-# returns a Roman numeral representing it.
-#
-# The Roman::Grammar and Roman::Actions are spliced into the running Raku
-# grammar and augment the existing <number> type to include my <romanint>
-# token.
-#
-# Roman::Grammar contains the token and related rule.
-#
-# Roman::Actions is where the fun starts, read that code for more explanation.
-#
-
-sub to-roman (Int $val) is export
-  {
-  my $current = $val;
-  my $roman = '';
-  my %num-map =
-    (
-    1 => 'I',
-    5 => 'V',
-    10 => 'X',
-    50 => 'L',
-    100 => 'C',
-    500  => 'D',
+# Integer value to character mapping
+my constant %num-map =
+        1 => 'I',
+        5 => 'V',
+       10 => 'X',
+       50 => 'L',
+      100 => 'C',
+      500 => 'D',
     1_000 => 'M',
-    5_000 => '\c[0x2181]',
-    10_000 => '\c[0x2182]',
-    50_000 => '\c[0x2187]',
-    100_000 => '\c[0x2188]'
+    5_000 => 'ↁ',  # 2181 ROMAN NUMERAL FIVE THOUSAND
+   10_000 => 'ↂ',  # 2182 ROMAN NUMERAL TEN THOUSAND
+   50_000 => 'ↇ',  # 2187 ROMAN NUMERAL FIFTY THOUSAND
+  100_000 => 'ↈ',  # 2188 ROMAN NUMERAL ONE HUNDRED THOUSAND
+;
+
+# Character to integer value mapping
+my constant %char-map =
+     I  =>       1,
+    "Ⅰ" =>       1,  # 2160 ROMAN NUMERAL ONE
+    "Ⅱ" =>       2,  # 2161 ROMAN NUMERAL TWO
+    "Ⅲ" =>       3,  # 2162 ROMAN NUMERAL THREE
+    "Ⅳ" =>       4,  # 2163 ROMAN NUMERAL FOUR
+     V  =>       5,
+    "Ⅴ" =>       5,  # 2164 ROMAN NUMERAL FIVE
+    "Ⅵ" =>       6,  # 2165 ROMAN NUMERAL SIX
+    "Ⅶ" =>       7,  # 2166 ROMAN NUMERAL SEVEN
+    "Ⅷ" =>       8,  # 2167 ROMAN NUMERAL EIGHT
+    "Ⅸ" =>       9,  # 2168 ROMAN NUMERAL NINE
+     X  =>      10,
+    "Ⅹ" =>      10,  # 2169 ROMAN NUMERAL TEN
+    "Ⅺ" =>      11,  # 216A ROMAN NUMERAL ELEVEN
+    "Ⅻ" =>      12,  # 216B ROMAN NUMERAL TWELVE
+     L  =>      50,
+    "Ⅼ" =>      50,  # 216C ROMAN NUMERAL FIFTY
+     C  =>     100,
+    "Ⅽ" =>     100,  # 216D ROMAN NUMERAL ONE HUNDRED
+     D  =>     500,
+    "Ⅾ" =>     500,  # 216E ROMAN NUMERAL FIVE HUNDRED
+     M  =>   1_000,
+    "Ⅿ" =>   1_000,  # 216F ROMAN NUMERAL ONE THOUSAND
+    "ↀ" =>   1_000,  # 2180 ROMAN NUMERAL ONE THOUSAND C D
+    "ↁ" =>   5_000,  # 2181 ROMAN NUMERAL FIVE THOUSAND
+    "ↂ" =>  10_000,  # 2182 ROMAN NUMERAL TEN THOUSAND
+    "ↇ" =>  50_000,  # 2187 ROMAN NUMERAL FIFTY THOUSAND
+    "ↈ" => 100_000,  # 2188 ROMAN NUMERAL ONE HUNDRED THOUSAND
+;
+
+# Convert a given integer value to a Roman numeral string
+my constant @nums = %num-map.keys.sort.reverse;
+my sub to-roman(Int:D $val) is export {
+    my $current = $val;
+    my str @parts;
+
+    for @nums -> $value {
+        while $value <= $current {
+            $current -= $value;
+            @parts.push: %num-map{$value};
+        }
+    }
+    @parts.join
+}
+
+# Convert a given string consisting of Roman numerals to an integer value
+my sub to-number(Str:D $value) is export {
+
+    # Find subtractives and convert them to additives
+    #
+    # IV => IIII ( 5 - 1 == 4 )
+    # IX => VIIII ( 10 - 1 == 9 )
+    # XL => XXXX ( 50 - 10 == 40 )
+    # IL => XXXXVIIII ( 50 - 1 == 49 )
+    # XC => LXXXX ( 100 - 10 == 90 )
+    # CD => CCCC ( 500 - 100 == 400 )
+    # CM => DCCCC ( 1000 - 100 == 900 )
+
+    $value.subst(/
+      (<[ I Ⅰ X Ⅹ C Ⅽ M Ⅿ ↂ ]>)
+      (<[ V Ⅴ X Ⅹ L Ⅼ C Ⅽ D Ⅾ M Ⅿ ↁ ↂ ↇ ↈ ]>)
+    /, {
+        %char-map{$0} < %char-map{$1}
+          ?? to-roman(%char-map{$1} - %char-map{$0})
+          !! $0 ~ $1
+    }, :global).comb.map({
+        %char-map{$_} // die "Unexpected '$_' in Roman numeral"
+    }).sum
+}
+
+sub EXPORT() {
+    my role Grammar {
+        # Patch the <number> rule to add our own numeric type.
+        #
+        # Describes a Roman number.  Takes any additional word characters
+        # to be able to produce a better error message at compilation time
+        token number:sym<roman> {
+            '0r' <( <[ I V X L C D M Ⅰ .. Ⅿ ↀ ↁ ↂ ↇ ↈ  \w ]>+
+        }
+    }
+
+    my role Actions {
+        method number:sym<roman>(Mu $/) {
+            CATCH { OUTER::<$/>.panic: .message }
+
+            use QAST:from<NQP>;
+            make QAST::IVal.new(:value(to-number($/.Str)));
+        }
+    }
+
+    # Patch the running grammar with our Grammar and Actions roles.
+    my $LANG := $*LANG;
+    $LANG.define_slang(
+      'MAIN',
+      $LANG.slang_grammar('MAIN').^mixin(Grammar),
+      $LANG.slang_actions('MAIN').^mixin(Actions),
     );
 
-  for %num-map.keys.sort: { $^b <=> $^a } -> $value
-    {
-    while ($value <= $current)
-      {
-      $current -= $value;
-      $roman ~= %num-map{$value};
-      }
-    }
-  return $roman;
-  }
-
-sub Slang::Roman::to-number(Str $value) is export
-  {
-  my %char-map =
-    (
-    I => 1, "\c[0x2160]" => 1,
-            "\c[0x2161]" => 2,
-            "\c[0x2162]" => 3,
-            "\c[0x2163]" => 4,
-    V => 5, "\c[0x2164]" => 5,
-            "\c[0x2165]" => 6,
-            "\c[0x2166]" => 7,
-            "\c[0x2167]" => 8,
-            "\c[0x2168]" => 9,
-    X => 10, "\c[0x2169]" => 10,
-             "\c[0x216a]" => 11,
-             "\c[0x216b]" => 12,
-    L => 50, "\c[0x216c]" => 50,
-    C => 100, "\c[0x216d]" => 100,
-    D => 500, "\c[0x216e]" => 500,
-    M => 1_000, "\c[0x216f]" => 1_000,
-                "\c[0x2180]" => 1_000, # C D
-                "\c[0x2181]" => 5_000,
-                "\c[0x2182]" => 10_000,
-                # claudian antisigma
-                #\c[0x2183] # ROMAN NUMERAL REVERSED ONE HUNDRED
-                "\c[0x2187]" => 50_000,
-                "\c[0x2188]" => 100_000,
-    );
-  my $num = $value;
-  $num ~~ s/^0r//;
-
-  # Find subtractives and convert them to additives
-  #
-  # IV => IIII ( 5 - 1 == 4 )
-  # IX => VIIII ( 10 - 1 == 9 )
-  # XL => XXXX ( 50 - 10 == 40 )
-  # IL => XXXXVIIII ( 50 - 1 == 49 )
-  # XC => LXXXX ( 100 - 10 == 90 )
-  # CD => CCCC ( 500 - 100 == 400 )
-  # CM => DCCCC ( 1000 - 100 == 900 )
-
-  $num ~~ s:g/
-    (<[
-    I \c[0x2160]
-    X \c[0x2169]
-    C \c[0x216d]
-    M \c[0x216f]
-      \c[0x2182]
-    ]>)
-    (<[
-    V \c[0x2164]
-    X \c[0x2169]
-    L \c[0x216c]
-    C \c[0x216d]
-    D \c[0x216e]
-    M \c[0x216f]
-      \c[0x2181]
-      \c[0x2182]
-      \c[0x2187]
-      \c[0x2188]
-    ]>)
-    / {
-      my $x = ( %char-map{$0} < %char-map{$1} )
-      ?? to-roman ( %char-map{$1} - %char-map{$0} )
-      !! ( $0 ~ $1 );
-      $x;
-    } /;
-
-  my @chars = $num.split('');
-
-  # Additive only for now...
-  #
-  my Int $final-value = 0;
-  for @chars -> $x
-    {
-    next unless %char-map{$x}:exists;
-    $final-value += %char-map{$x};
-    }
-  $final-value;
-  }
-
-sub EXPORT(|)
-  {
-  role Roman::Grammar
-    {
-    # Patch the <number> rule to add our own numeric type.
-    #
-    # This gets bound to a grammar action at runtime, so that we can capture
-    # the string.
-    #
-    rule number:sym<roman>
-      { <romanint> }
-
-    # Describes a Roman number. Note that this includes the full Unicode range
-    # of valid numbers - 1 .. 12 are there because some countries use formats
-    # like '25-XII-2015' to represent Christmas, and they use the Unicode
-    # roman numerals to fit in to forms.
-    #
-    token romanint
-      { '0r' <[ I V X L C D M \c[0x2160] .. \c[0x2183] \c[0x2187] \c[0x2188] ]>+
-      }
-    }
-
-  role Roman::Actions
-    {
-    sub lk(Mu \h, \k)
-      { nqp::atkey(nqp::findmethod(h, 'hash')(h), k) }
-
-    # This is called at compile-time, and replaces the '0rIIII' in the input
-    # with a function call which converts the Roman numeral to its decimal
-    # equivalent.
-    #
-    method number:sym<roman>(Mu $/)
-      {
-      my $number   := lk($/, 'romanint');
-      my $block := QAST::Op.new(
-                     :op<call>,
-                     :name<&Slang::Roman::to-number>,
-                     QAST::SVal.new(:value($number.Str))
-                   );
-      $/.make($block);
-      }
-    }
-
-  # Patch the running grammar with our Grammar and Actions roles.
-  #
-  $*LANG.define_slang(
-    'MAIN',
-    $*LANG.slang_grammar('MAIN').^mixin(Roman::Grammar),
-    $*LANG.slang_actions('MAIN').^mixin(Roman::Actions),
-  );
-
-  {}
-  }
+    BEGIN Map.new
+}
 
 =begin pod
 
@@ -215,7 +150,7 @@ Comments and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2016, 2018 Jeff Goff, 2020- Raku Community
+Copyright 2016, 2018 Jeff Goff, 2020-2023 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
