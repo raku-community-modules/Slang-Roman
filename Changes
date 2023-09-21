@@ -1,6 +1,8 @@
 Revision history for Slang::Roman
   
 {{$NEXT}}
+
+0.4  2023-09-22T00:36:47+02:00
     - Add dependency on Slangify
 
 0.3  2023-09-20T20:47:13+02:00
