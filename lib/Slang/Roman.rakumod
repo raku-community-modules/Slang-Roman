@@ -85,36 +85,26 @@ my sub to-number(Str:D $value) is export {
     }).sum
 }
 
-sub EXPORT() {
-    my role Grammar {
-        # Patch the <number> rule to add our own numeric type.
-        #
-        # Describes a Roman number.  Takes any additional word characters
-        # to be able to produce a better error message at compilation time
-        token number:sym<roman> {
-            '0r' <( <[ I V X L C D M Ⅰ .. Ⅿ ↀ ↁ ↂ ↇ ↈ  \w ]>+
-        }
+my role Grammar {
+    # Patch the <number> rule to add our own numeric type.
+    #
+    # Describes a Roman number.  Takes any additional word characters
+    # to be able to produce a better error message at compilation time
+    token number:sym<roman> {
+        '0r' <( <[ I V X L C D M Ⅰ .. Ⅿ ↀ ↁ ↂ ↇ ↈ  \w ]>+
     }
-
-    my role Actions {
-        method number:sym<roman>(Mu $/) {
-            CATCH { OUTER::<$/>.panic: .message }
-
-            use QAST:from<NQP>;
-            make QAST::IVal.new(:value(to-number($/.Str)));
-        }
-    }
-
-    # Patch the running grammar with our Grammar and Actions roles.
-    my $LANG := $*LANG;
-    $LANG.define_slang(
-      'MAIN',
-      $LANG.slang_grammar('MAIN').^mixin(Grammar),
-      $LANG.slang_actions('MAIN').^mixin(Actions),
-    );
-
-    BEGIN Map.new
 }
+
+my role Actions {
+    method number:sym<roman>(Mu $/) {
+        CATCH { OUTER::<$/>.panic: .message }
+
+        use QAST:from<NQP>;
+        make QAST::IVal.new(:value(to-number($/.Str)));
+    }
+}
+
+use Slangify Grammar, Actions;
 
 =begin pod
 
