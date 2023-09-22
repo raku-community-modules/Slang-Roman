@@ -95,6 +95,11 @@ my role Grammar {
     }
 }
 
+use experimental :rakuast;
+class RakuAST::RomanLiteral is RakuAST::Constant {
+    method deparse() { '0r' ~ to-roman(self.value) }
+}
+
 my role Actions {
     method number:sym<roman>(Mu $/) {
         CATCH { OUTER::<$/>.panic: .message }
@@ -102,14 +107,6 @@ my role Actions {
 
         # Running under the Raku grammar
         if self.^name.starts-with('Raku::') {
-            use experimental :rakuast;
-            my class RakuAST::RomanLiteral is RakuAST::IntLiteral {
-                my class Roman {
-                    has $.value;
-                    method raku() { '0r' ~ to-roman($!value) }
-                }
-                method value() { Roman.new(value => callsame) }
-            }
             make RakuAST::RomanLiteral.new($value);
         }
 
