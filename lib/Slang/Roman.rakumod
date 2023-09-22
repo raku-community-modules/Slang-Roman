@@ -46,7 +46,7 @@ my constant %char-map =
 ;
 
 # Convert a given integer value to a Roman numeral string
-my constant @nums = %num-map.keys.sort.reverse;
+my constant @nums = %num-map.keys.sort(*.Int).reverse;
 my sub to-roman(Int:D $val) is export {
     my $current = $val;
     my str @parts;
@@ -98,9 +98,26 @@ my role Grammar {
 my role Actions {
     method number:sym<roman>(Mu $/) {
         CATCH { OUTER::<$/>.panic: .message }
+        my $value := to-number($/.Str);
 
-        use QAST:from<NQP>;
-        make QAST::IVal.new(:value(to-number($/.Str)));
+        # Running under the Raku grammar
+        if self.^name.starts-with('Raku::') {
+            use experimental :rakuast;
+            my class RakuAST::RomanLiteral is RakuAST::IntLiteral {
+                my class Roman {
+                    has $.value;
+                    method raku() { '0r' ~ to-roman($!value) }
+                }
+                method value() { Roman.new(value => callsame) }
+            }
+            make RakuAST::RomanLiteral.new($value);
+        }
+
+        # Running under the legacy grammar
+        else {
+            use QAST:from<NQP>;
+            make QAST::IVal.new(:$value);
+        }
     }
 }
 

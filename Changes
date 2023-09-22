@@ -2,6 +2,10 @@ Revision history for Slang::Roman
   
 {{$NEXT}}
 
+0.5  2023-09-22T11:16:56+02:00
+    - Fix issue with "to-roman" introduced in 0.3
+    - Add support for running under RakuAST, including deparsing
+
 0.4  2023-09-22T00:36:47+02:00
     - Add dependency on Slangify
 
