@@ -29,17 +29,14 @@ REFERENCE
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Roman_numerals), the standard form is:
 
-| # | Thousands | Hundreds | Tens | Units |
-|---|-----------|----------|------|-------|
-| 1 | M         | C        | X    | I     |
-| 2 | MM        | CC       | XX   | II    |
-| 3 | MMM       | CCC      | XXX  | III   |
-| 4 |           | CD       | XL   | IV    |
-| 5 |           | D        | L    | V     |
-| 6 |           | DC       | LX   | VI    |
-| 7 |           | DCC      | LXX  | VII   |
-| 8 |           | DCCC     | LXXX | VIII  |
-| 9 |           | CM       | XC   | IX    |
+<table class="pod-table">
+<thead><tr>
+<th>#</th> <th>Thousands</th> <th>Hundreds</th> <th>Tens</th> <th>Units</th>
+</tr></thead>
+<tbody>
+<tr> <td>1</td> <td>M</td> <td>C</td> <td>X</td> <td>I</td> </tr> <tr> <td>2</td> <td>MM</td> <td>CC</td> <td>XX</td> <td>II</td> </tr> <tr> <td>3</td> <td>MMM</td> <td>CCC</td> <td>XXX</td> <td>III</td> </tr> <tr> <td>4</td> <td></td> <td>CD</td> <td>XL</td> <td>IV</td> </tr> <tr> <td>5</td> <td></td> <td>D</td> <td>L</td> <td>V</td> </tr> <tr> <td>6</td> <td></td> <td>DC</td> <td>LX</td> <td>VI</td> </tr> <tr> <td>7</td> <td></td> <td>DCC</td> <td>LXX</td> <td>VII</td> </tr> <tr> <td>8</td> <td></td> <td>DCCC</td> <td>LXXX</td> <td>VIII</td> </tr> <tr> <td>9</td> <td></td> <td>CM</td> <td>XC</td> <td>IX</td> </tr>
+</tbody>
+</table>
 
 The numerals for 4 (IV) and 9 (IX) are written using subtractive notation,where the smaller symbol (I) is subtracted from the larger one (V, or X), thus avoiding the clumsier IIII and VIIII. Subtractive notation is also used for 40 (XL), 90 (XC), 400 (CD) and 900 (CM). These are the only subtractive forms in standard use.
 
@@ -53,7 +50,7 @@ Source can be located at: https://github.com/raku-community-modules/Slang-Roman 
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2016, 2018 Jeff Goff, 2020-2024 Raku Community
+Copyright 2016, 2018 Jeff Goff, 2020-2023 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

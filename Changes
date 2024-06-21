@@ -2,6 +2,9 @@ Revision history for Slang::Roman
   
 {{$NEXT}}
 
+0.6.1  2024-06-21T15:03:02+01:00
+    - Move README to POD6
+    
 0.6  2024-06-21T14:10:54+01:00
     - Add reference section to README
     - Implement reference section subtractive standard
