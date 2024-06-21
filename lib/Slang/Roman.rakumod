@@ -68,7 +68,6 @@ my sub to-number(Str:D $value) is export {
     # IV => IIII ( 5 - 1 == 4 )
     # IX => VIIII ( 10 - 1 == 9 )
     # XL => XXXX ( 50 - 10 == 40 )
-    # IL => XXXXVIIII ( 50 - 1 == 49 )
     # XC => LXXXX ( 100 - 10 == 90 )
     # CD => CCCC ( 500 - 100 == 400 )
     # CM => DCCCC ( 1000 - 100 == 900 )
