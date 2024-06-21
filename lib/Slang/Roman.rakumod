@@ -64,25 +64,24 @@ my sub to-roman(Int:D $val) is export {
 my sub to-number(Str:D $value) is export {
 
     # Find subtractives and convert them to additives
-    #
-    # IV => IIII ( 5 - 1 == 4 )
-    # IX => VIIII ( 10 - 1 == 9 )
-    # XL => XXXX ( 50 - 10 == 40 )
-    # IL => XXXXVIIII ( 50 - 1 == 49 )
-    # XC => LXXXX ( 100 - 10 == 90 )
-    # CD => CCCC ( 500 - 100 == 400 )
-    # CM => DCCCC ( 1000 - 100 == 900 )
 
-    $value.subst(/
-      (<[ I Ⅰ X Ⅹ C Ⅽ M Ⅿ ↂ ]>)
-      (<[ V Ⅴ X Ⅹ L Ⅼ C Ⅽ D Ⅾ M Ⅿ ↁ ↂ ↇ ↈ ]>)
-    /, {
-        %char-map{$0} < %char-map{$1}
-          ?? to-roman(%char-map{$1} - %char-map{$0})
-          !! $0 ~ $1
-    }, :global).comb.map({
-        %char-map{$_} // die "Unexpected '$_' in Roman numeral"
-    }).sum
+    my %subtractives = (
+        IV =>  'IIII',  #( 5 - 1 == 4 )
+        IX => 'VIIII',  #( 10 - 1 == 9 )
+        XL =>  'XXXX',  #( 50 - 10 == 40 )
+        XC => 'LXXXX',  #( 100 - 10 == 90 )
+        CD =>  'CCCC',  #( 500 - 100 == 400 )
+        CM => 'DCCCC',  #( 1000 - 100 == 900 )
+    );
+
+    my Pair $p = (.keys => .values) given %subtractives;
+
+    $value
+        .trans( $p )
+        .comb.map({
+            %char-map{$_} // die "Unexpected '$_' in Roman numeral"
+        })
+        .sum
 }
 
 my role Grammar {
