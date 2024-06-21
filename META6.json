@@ -14,12 +14,12 @@
   },
   "resources": [
   ],
-  "source-url": "git://github.com/raku-community-modules/Slang-Roman.git",
+  "source-url": "https://github.com/raku-community-modules/Slang-Roman.git",
   "tags": [
     "ROMAN",
     "NUMERALS"
   ],
   "test-depends": [
   ],
-  "version": "0.5"
+  "version": "0.6"
 }
