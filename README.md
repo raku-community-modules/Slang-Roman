@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/raku-community-modules/Slang-Roman/workflows/test/badge.svg)](https://github.com/raku-community-modules/Slang-Roman/actions)
+[![Actions Status](https://github.com/raku-community-modules/Slang-Roman/actions/workflows/linux.yml/badge.svg)](https://github.com/raku-community-modules/Slang-Roman/actions) [![Actions Status](https://github.com/raku-community-modules/Slang-Roman/actions/workflows/macos.yml/badge.svg)](https://github.com/raku-community-modules/Slang-Roman/actions) [![Actions Status](https://github.com/raku-community-modules/Slang-Roman/actions/workflows/windows.yml/badge.svg)](https://github.com/raku-community-modules/Slang-Roman/actions)
 
 NAME
 ====
@@ -43,14 +43,16 @@ The numerals for 4 (IV) and 9 (IX) are written using subtractive notation,where 
 AUTHOR
 ======
 
-Jeff Goff (DrForr)
+  * Jeff Goff (DrForr)
 
 Source can be located at: https://github.com/raku-community-modules/Slang-Roman . Comments and Pull Requests are welcome.
 
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2016, 2018 Jeff Goff, 2020-2023 Raku Community
+Copyright 2016, 2018 Jeff Goff
+
+Copuright 2020-2025 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

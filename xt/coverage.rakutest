@@ -1,0 +1,12 @@
+use Test::Coverage;
+
+default-coverage-setup;
+
+run;
+%*ENV<RAKUDO_RAKUAST>=1;
+run;
+
+todo "some hard to cover edge cases";
+must-be-complete;
+
+# vim: expandtab shiftwidth=4

@@ -1,6 +1,13 @@
 Revision history for Slang::Roman
   
 {{$NEXT}}
+    - Modernize META6.json and docs
+    - Bump dependency on Slangify
+    - Added initial source SBOM
+    - Fix bug on RakuAST
+    - Add CI badge for each OS
+    - Add coverage testing (now at 86%)
+    - Update copyright year
 
 0.6.1  2024-06-21T15:03:02+01:00
     - Move README to POD6
