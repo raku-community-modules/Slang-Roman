@@ -1,6 +1,8 @@
 {
   "auth": "zef:raku-community-modules",
-  "authors": [ "Jeff Goff (DrForr)" ],
+  "authors": [
+    "Jeff Goff (DrForr)"
+  ],
   "build-depends": [
   ],
   "depends": [
@@ -10,11 +12,11 @@
   "license": "Artistic-2.0",
   "name": "Slang::Roman",
   "perl": "6.d",
-  "raku": "6.d",
   "production": true,
   "provides": {
     "Slang::Roman": "lib/Slang/Roman.rakumod"
   },
+  "raku": "6.d",
   "resources": [
   ],
   "source-url": "https://github.com/raku-community-modules/Slang-Roman.git",

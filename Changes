@@ -1,6 +1,8 @@
 Revision history for Slang::Roman
   
 {{$NEXT}}
+
+0.6.2  2025-08-03T20:48:46+02:00
     - Modernize META6.json and docs
     - Bump dependency on Slangify
     - Added initial source SBOM
