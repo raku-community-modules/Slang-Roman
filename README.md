@@ -52,7 +52,7 @@ COPYRIGHT AND LICENSE
 
 Copyright 2016, 2018 Jeff Goff
 
-Copuright 2020-2025 Raku Community
+Copuright 2020 - 2026 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

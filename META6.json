@@ -5,9 +5,13 @@
   ],
   "build-depends": [
   ],
-  "depends": [
-    "Slangify:ver<0.0.4+>:auth<zef:lizmat>"
-  ],
+  "depends": {
+    "runtime": {
+      "requires": [
+        "Slangify:ver<0.0.4+>:auth<zef:lizmat>"
+      ]
+    }
+  },
   "description": "lets you use Roman numerals in your code",
   "license": "Artistic-2.0",
   "name": "Slang::Roman",
@@ -31,5 +35,5 @@
   ],
   "test-depends": [
   ],
-  "version": "0.6.2"
+  "version": "0.6.3"
 }

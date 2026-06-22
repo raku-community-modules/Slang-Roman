@@ -46,7 +46,7 @@ my constant %char-map =
 ;
 
 # Convert a given integer value to a Roman numeral string
-my constant @nums = %num-map.keys.sort(*.Int).reverse;
+my constant @nums = eager %num-map.keys.sort(*.Int).reverse;
 my sub to-roman(Int:D $val) is export {
     my $current = $val;
     my str @parts;
